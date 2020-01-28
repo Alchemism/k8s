@@ -1,0 +1,46 @@
+---
+
+###### Create Kubernetes cluster using kops
+
+- name: Get availability zones info
+  include_tasks: get-az-info.yml
+
+- name: Set up topology config
+  set_fact:
+      topology: private
+      public-ip: false
+
+- name: Set up bastion
+  set_fact:
+      bastion: true
+
+- name: Set up kubernetes-version
+  set_fact:
+      kubernetes-version: 1.15.0
+  when: kubernetes-version is not defined
+
+- name: Set up master-node-size
+  set_fact:
+      master-node-size: t3.small
+  when: master-node-size is not defined
+
+- name: Set up compute-node-size
+  set_fact:
+    compute-node-size: t2.micro
+  when: compute-node-size is not defined
+
+- name: Set up compute-node-count if it is not defined
+  set_fact:
+    compute-node-count: 1
+  when: compute-node-count is not defined
+
+- name: Increase count to 3 if we have 3 or more zones
+  set_fact:
+    compute-node-count: 3
+  when: compute-node-count < 3 and availability_zones.availability_zones||length >= 3
+
+- name: Set up DNS
+  set_fact:
+      dns: private
+      dns-zone: 
+  when: master-node-size is not defined

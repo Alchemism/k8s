@@ -1,0 +1,5 @@
+  - name: Get availability zones info
+    aws_az_info:
+      filters:
+        region-name: us-east-1
+    register: availability_zones
