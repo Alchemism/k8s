@@ -1,46 +1,55 @@
 ---
-
 ###### Create Kubernetes cluster using kops
+- name: get clusters
+  command: kops get clusters
+  ignore_errors: yes
+  register: clusters
 
 - name: Get availability zones info
   include_tasks: get-az-info.yml
 
-- name: Set up topology config
-  set_fact:
-      topology: private
-      public-ip: false
+- name: Debug
+  debug:
+    msg: "{{profile}}"
 
-- name: Set up bastion
+- name: get AZ
   set_fact:
-      bastion: true
+    zones: "{{az_facts.availability_zones | map(attribute='zone_name') | list}}"
 
-- name: Set up kubernetes-version
+- name: Get cluster environment
   set_fact:
-      kubernetes-version: 1.15.0
-  when: kubernetes-version is not defined
+    type: "{{type}}"
 
-- name: Set up master-node-size
+- name: Set dev facts
   set_fact:
-      master-node-size: t3.small
-  when: master-node-size is not defined
+    compute_node_zones: "{{zones | random}}"
+    master_node_zones: "{{zones | random}}"
+    compute_node_size: "{{compute_node_size | default('t2.micro')}}"
+    master_node_size: "{{master_node_size | default('t3.small')}}"
+    master_count: "{{master_count | default(1)}}"
+    compute_node_count: "{{compute_node_count | default(2)}}"
+  when: type == "dev"
 
-- name: Set up compute-node-size
+- name: Set Prod facts
   set_fact:
-    compute-node-size: t2.micro
-  when: compute-node-size is not defined
+    compute_node_zones: "{{az_facts.availability_zones[0].zone_name }},{{az_facts.availability_zones[1].zone_name}},{{az_facts.availability_zones[2].zone_name}}"
+    master_node_zones: "{{az_facts.availability_zones[0].zone_name }},{{az_facts.availability_zones[1].zone_name}},{{az_facts.availability_zones[2].zone_name}}"
+    compute_node_size: "{{compute_node_size | default('t3.small')}}"
+    master_node_size: "{{master_node_size | default('m4.large')}}"
+    master_count: "{{master_count | default(3)}}"
+    compute_node_count: "{{compute_node_count | default(3)}}"
+  when: type == "prod"
 
-- name: Set up compute-node-count if it is not defined
+- name: Set up kubernetes_version
   set_fact:
-    compute-node-count: 1
-  when: compute-node-count is not defined
+    kubernetes_version: 1.15.0
+  when: kubernetes_version is not defined
 
-- name: Increase count to 3 if we have 3 or more zones
-  set_fact:
-    compute-node-count: 3
-  when: compute-node-count < 3 and availability_zones.availability_zones||length >= 3
+- name: Create cluster
+  shell: "kops create cluster {{namespace}} --master-count {{master_count}} --node-count {{compute_node_count}} --zones {{compute_node_zones}} --node-size {{compute_node_size}} --master-size {{master_node_size}} --master-zones {{master_node_zones}} --networking kopeio-vxlan --topology private --bastion --ssh-public-key={{ ssh_key }}"
+  when: clusters.stdout.find( '{{namespace}}' ) == -1
 
-- name: Set up DNS
-  set_fact:
-      dns: private
-      dns-zone: 
-  when: master-node-size is not defined
+- name: Deploy the cluster
+  command: kops update cluster {{namespace}} --yes
+
+- include_tasks: validate_cluster.yml
