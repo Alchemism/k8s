@@ -1,6 +1,12 @@
 ---
 - hosts: localhost
   connection: local
+  environment:
+    - AWS_REGION: "{{ aws_region }}"
+    - NAME: "{{ namespace }}"
+    - KOPS_STATE_STORE: s3://{{namespace}}
+    - AWS_PROFILE: "{{profile}}"
+    
   tasks:
     - import_role:
-        name: roles/delete-k8s-cluster.yml
+        name: roles/delete-cluster
