@@ -1,0 +1,51 @@
+---
+- name: Creating Security Group allowing Kubernetes VPC cidr_ip
+  ec2_group:
+    name: "{{ ec2_vpc_name }}-sg"
+    profile: "{{profile}}"
+    description: sg with rule descriptions
+    region: us-east-1
+    tags:
+      Name: "{{ ec2_vpc_name }}-sg"
+    rules:
+      - proto: all
+        ports:
+        - 0
+        cidr_ip: 172.20.0.0/16
+  register: security_group_details
+
+- name: Store EC2 Group ID.
+  set_fact:
+    ec2_group_id: "{{security_group_details.group_id}}"
+
+- name: Get security group
+  ec2_group_info:
+    profile: "{{profile}}"
+    filters:
+      "tag:Name": "{{ ec2_vpc_name }}-sg"
+  register: ec2_vpc_sgs
+
+- name: Create an RDS instance in the default VPC
+  rds:
+    command: create
+    profile: "{{profile}}"
+    instance_name: "{{ rds_instance_name }}"
+    db_engine: "{{ rds_db_engine }}"
+    port: "{{ rds_port }}"
+    db_name: "{{ rds_db_name }}"
+    username: "{{ rds_username }}"
+    password: "{{ rds_password }}"
+    publicly_accessible: "{{ rds_publicly_accessible }}"
+    zone: "{{ rds_zone }}"
+    region: "{{ rds_region }}"
+    size: "{{ rds_size }}"
+    instance_type: "{{ rds_instance_type }}"
+    #db_security_groups: "{{ ec2_vpc_sgs.security_groups[0].db_security_groups }}"
+    vpc_security_groups: "{{ ec2_vpc_sgs['security_groups'][0]['group_id'] }}"
+    wait: yes
+    wait_timeout: 1800
+  register: launched_rds
+  tags: launch_rds
+  
+
+

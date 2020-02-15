@@ -1,0 +1,12 @@
+{
+    "profile":"prod",
+    "type": "prod",
+    "namespace": "k8s.prod.soniamahankali.com",
+    "key_name": "ansible",
+    "email_id": "mahankali.s+prod@northeastern.edu",
+    "aws_region": "us-east-1",
+    "ssh_key": "~/.ssh/id_rsa.pub",
+    "AWS_ACCESS_KEY_ID": "AKIASEWCR6NI7W3ARLC3",
+    "AWS_SECRET_KEY_ID": "Jc/hAlchLJSFprHNb4tsqb77ww0hlC4VtKmMpQkY"
+}
+

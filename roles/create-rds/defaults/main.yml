@@ -10,6 +10,7 @@ rds_username: kubernetes
 rds_password: kubernetes
 rds_zone: us-east-1a
 rds_region: us-east-1
-rds_instance_type: db.m4.large
+rds_instance_type: db.t2.micro
 profile: prod
 vpc-id: vpc-e7745a9d
+ec2_vpc_name: default
