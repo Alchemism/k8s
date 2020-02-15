@@ -1,0 +1,21 @@
+---
+- name: Create cross account VPC peering Connection
+  ec2_vpc_peer:
+    region: "{{aws_region}}"
+    profile: "{{profile}}"
+    vpc_id: "{{ vpc_id }}"
+    #peer_region: "{{peer_region}}"
+    peer_vpc_id: "{{peer_vpc_id}}"
+    #peer_owner_id: "{{peer_owner_id}}"
+    state: present
+    tags:
+      Name: k8s 
+  register: vpc_peer
+
+- name: Accept local VPC peering request
+  ec2_vpc_peer:
+    region: "{{aws_region}}"
+    profile: "{{profile}}"
+    peering_id: "{{ vpc_peer.peering_id }}"
+    state: accept
+  register: action_peer

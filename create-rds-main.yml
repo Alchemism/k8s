@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  connection: local
+# tasks file for ansible-role-rds
+  tasks:
+    - import_role:
+        name: roles/vpc-peering

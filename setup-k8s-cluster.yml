@@ -1,5 +1,5 @@
 ---
-- hosts: local
+- hosts: localhost
   connection: local
   environment:
     - AWS_REGION: "{{ aws_region }}"
@@ -15,6 +15,13 @@
 
     - import_role:
         name: roles/create-cluster
+    - import_role:
+           name: roles/create-rds
+    - import_role:
+           name: roles/create-create-sg
+    - import_role:
+           name: roles/vpc-peering
+           
 
     # - name: update a cluster
     #   command: kops update cluster {{namespace}}

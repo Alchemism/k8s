@@ -1,0 +1,11 @@
+---
+- name: Create Security Group
+  include_tasks: createsg.yml
+
+- name: Get security group
+  ec2_group_info:
+  profile: "{{profile}}"
+  filters:
+    "tag:Name": "{{ ec2_vpc_name }}-sg"
+register: ec2_vpc_sgs
+
