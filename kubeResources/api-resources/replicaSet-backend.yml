@@ -18,21 +18,27 @@ spec:
       containers:
       - name: api
         image: junjie3617/webapp-backend:latest
+        env:
+          - name: url
+            valueFrom: 
+              configMapKeyRef:
+                name: configmap-api
+                key: url
         ports:
         - name: live-port
           containerPort: 8080
         livenessProbe:
           httpGet:
-            path: /
+            path: /test
             port: 8080
-          initialDelaySeconds: 30
+          initialDelaySeconds: 60
           periodSeconds: 10
         readinessProbe:
           httpGet:
-            path: /
+            path: /test
             port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
+          initialDelaySeconds: 30
+          periodSeconds: 10
       imagePullSecrets:
       - name: registrykey
 
