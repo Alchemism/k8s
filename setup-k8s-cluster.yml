@@ -1,5 +1,5 @@
 ---
-- hosts: local
+- hosts: localhost
   connection: local
   environment:
     - AWS_REGION: "{{ aws_region }}"
@@ -8,13 +8,14 @@
     - AWS_PROFILE: "{{profile}}"
 
   tasks:
-    - name: get clusters
-      command: kops get clusters
-      ignore_errors: yes
-      register: clusters
+    # - name: get clusters
+    #   command: kops get clusters
+    #   ignore_errors: yes
+    #   register: clusters
 
     - import_role:
-        name: roles/create-cluster
+        # name: roles/create-cluster
+        name: roles/create-rds
 
     # - name: update a cluster
     #   command: kops update cluster {{namespace}}
