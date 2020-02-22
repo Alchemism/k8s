@@ -8,14 +8,13 @@
     - AWS_PROFILE: "{{profile}}"
 
   tasks:
-    # - name: get clusters
-    #   command: kops get clusters
-    #   ignore_errors: yes
-    #   register: clusters
+    - name: get clusters
+      command: kops get clusters
+      ignore_errors: yes
+      register: clusters
 
     - import_role:
-        # name: roles/create-cluster
-        name: roles/create-rds
+        name: roles/create-cluster
 
     # - name: update a cluster
     #   command: kops update cluster {{namespace}}
