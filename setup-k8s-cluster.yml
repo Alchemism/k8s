@@ -14,7 +14,12 @@
       register: clusters
 
     - import_role:
-        name: roles/create-cluster
+        name: 
+          roles/create-cluster
+          roles/create-rds
+          roles/create-metrics-server
+        
+        
 
     # - name: update a cluster
     #   command: kops update cluster {{namespace}}

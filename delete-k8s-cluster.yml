@@ -9,5 +9,7 @@
     
   tasks:
     - import_role:
-        name: roles/delete-cluster
-        # name: roles/delete-rds
+        name: 
+          roles/delete-cluster
+          roles/delete-rds
+          roles/delete-metrics-server

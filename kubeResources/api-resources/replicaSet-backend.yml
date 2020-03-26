@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: junjie3617/webapp-backend:latest
+        image: soniamahankali/webapp-backend:latest
         env:
           - name: db_url
             valueFrom: 

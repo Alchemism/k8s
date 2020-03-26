@@ -24,8 +24,8 @@
   set_fact:
     compute_node_zones: "{{zones | random}}"
     master_node_zones: "{{zones | random}}"
-    compute_node_size: "{{compute_node_size | default('t2.micro')}}"
-    master_node_size: "{{master_node_size | default('t3.small')}}"
+    compute_node_size: "{{compute_node_size | default('t3.xlarge')}}"
+    master_node_size: "{{master_node_size | default('t3.xlarge')}}"
     master_count: "{{master_count | default(1)}}"
     compute_node_count: "{{compute_node_count | default(2)}}"
   when: type == "dev"
