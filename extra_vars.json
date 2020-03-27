@@ -1,0 +1,9 @@
+{
+    "profile":"dev",
+    "type": "dev",
+    "namespace":"k8s.dev.soniamahankali.com",
+    "key_name": "ansible",
+    "email_id": "soniamahankali+dev@husky.neu.edu",
+    "aws_region": "us-east-1",
+    "ssh_key": "~/.ssh/id_rsa.pub"
+}

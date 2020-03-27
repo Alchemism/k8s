@@ -1,0 +1,4 @@
+---
+# tasks file for delete-metrics-server
+- name: Uninstall Metrics Server
+  command: helm uninstall metrics
